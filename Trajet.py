@@ -6,7 +6,7 @@ class Trajet():
 		self.arrive = arrive 	#position de l'arrivee
 		self.routes
 		
-		
+	#construit le trajet avec la latitude et la longitude des points d'arrivee et de depart
 	def construireTrajet(self):
 		api = overpy.Overpass()
 
@@ -17,7 +17,12 @@ class Trajet():
 			out body;
 			""")
 		self.construireRoutes(result)
-	
+		
+	#construit le tableau des routes nécessaire au trajet en rajoutant les routes a la fin du tableau
 	def construireRoutes(self, trajet):
 		for route in trajet.way:
 			self.routes.append(Route(route))
+	
+	#return tableau de routes pour classe fourmis		
+	def getRoutes(self)
+		return routes
