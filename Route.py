@@ -16,7 +16,7 @@ class Route(object):
 		self.nodes=[]
 		i=0
 		for node in track.nodes:
-			self.nodes.append(Point(self.name+i,node))
+			self.nodes.append(Point(self.name+i,node.lat,node.lng))
 			i+=1
 
 	def getMaxSpeed(self):

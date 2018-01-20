@@ -2,11 +2,10 @@
 
 class Point():
 
-    def __init__(self,nom, node, route):
+    def __init__(self,nom, lat, lon):
         self.nom = nom
-        self.latitude = node.lat
-        self.longitude = node.lon
-        self.route = route
+        self.latitude = lat
+        self.longitude = lon
 
     def getLatitude(self):
         return self.latitude
