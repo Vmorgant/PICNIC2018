@@ -16,7 +16,7 @@ class Trajet(object):
 		# fetch all ways and nodes
 		query = """[out:json];way("""+str(self.depart[0])+""","""+str(self.depart[1])+""","""+str(self.arrive[0])+""","""+str(self.arrive[1])+""")[highway];(._;>;);out;"""
 		lesCheminsPossibles = api.query(query)
-
+		print(lesCheminsPossibles)
 		leChemin = self.chercherMeilleurChemin(lesCheminsPossibles)
 		self.construireRoutes(leChemin)
 
@@ -25,8 +25,8 @@ class Trajet(object):
 		lesCheminsBon = []
 		for chemin in lesChemins.ways:
 			type = chemin.tags.get("highway")
-			#print(chemin.tags.get("oneway"))
-			if( (type == "tertiary" or type == "secondary" or type == "primary") and (chemin.tags.get("oneway") != -1)):
+			print(chemin.tags.get("oneway"))
+			if( (type == "tertiary" or type == "secondary" or type == "primary") and (chemin.tags.get("oneway") != None)):
 				lesCheminsBon.append(chemin)
 		minLong=900
 		meilleurChemin = None
@@ -44,5 +44,23 @@ class Trajet(object):
 	def getRoutes(self):
 		return self.routes
 #trajet = Trajet("rfqegzfruqez","info",[47.984393,0.236012],[47.984946,0.238951])
-trajet = Trajet("rfqegzfruqez","info",[47.981339, 0.233318],[47.9844782,0.2415538])
-print(trajet.routes)
+#trajet = Trajet("rfqegzfruqez","info",[47.9844782,0.2415538],[47.981339, 0.233318])
+#print(trajet.routes)
+
+import overpy
+
+api = overpy.Overpass()
+
+# fetch all ways and nodes
+result = api.query("""
+    way(50.746,7.154,50.748,7.157) ["highway"];
+    (._;>;);
+    out body;
+    """)
+print(result.areas())
+for way in result.ways:
+    print("Name: %s" % way.tags.get("name", "n/a"))
+    print("  Highway: %s" % way.tags.get("highway", "n/a"))
+    print("  Nodes:")
+    for node in way.nodes:
+        print("    Lat: %f, Lon: %f" % (node.lat, node.lon))

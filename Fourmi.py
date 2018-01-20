@@ -1,3 +1,4 @@
+from Trajet import Trajet
 
 class Fourmi(object):
 
@@ -99,3 +100,8 @@ class Fourmi(object):
         self.vitesse = 0
         self.colonie.ajouterGraine(self.id)
         self.graine = False
+
+
+
+aller = Trajet("rfqegzfruqez","info",[47.981339, 0.233318],[47.9844782,0.2415538])
+retour = Trajet("rfqegzfruqez","info",[47.9844782,0.2415538],[47.981339, 0.233318])
