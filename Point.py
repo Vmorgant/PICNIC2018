@@ -13,8 +13,8 @@ class Point():
     def getLongitude(self):
         return self.longitude
 
-    def distance(p2):
+    def distance(self,p2):
         return math.sqrt( ( (self.latitude-p2.getLatitude() )**2) + ( (self.longitude-p2.getLongitude() )**2) )
 
-    def getNom():
+    def getNom(self):
         return self.nom

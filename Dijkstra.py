@@ -1,5 +1,7 @@
 from collections import defaultdict
 from heapq import *
+import overpy
+import overpy.helper
 
 def dijkstra(edges, f, t):
     g = defaultdict(list)
@@ -18,10 +20,11 @@ def dijkstra(edges, f, t):
                 if v2 not in seen:
                     heappush(q, (cost+c, v2, path))
 
-    return float("inf")
+    return "Pas de chemin"
+
 def calculPoids(route,P1,P2,):
     distance=P1.distance(P2)
-    if(route.getHighway != "tertiary" or type != "secondary" or type != "primary") or (route.getOneway == "none")):
+    if((route.getHighway() != "tertiary" or route.getHighway() != "secondary" or route.getHighway() != "primary") or (route.getOneway == None)):
         distance = 9999
     Poids = distance/route.getMaxSpeed()
     return Poids
@@ -64,13 +67,7 @@ def grapheCreer(routes,Pdep,Parr):
     aFaire=pointRoute
     for point in pointRoute:
         for point2 in aFaire:
-            if memeroute(point1,point2,routes):
-                edges.append((point1.getNom(),point2.getNom(),calculPoids(route,point1,point2)))
+            resMemRoute = memeroute(point,point2,routes)
+            if resMemRoute[0]:
+                edges.append((point.getNom(),point2.getNom(),calculPoids(resMemRoute[1],point,point2)))
     return edges
-
-print( "=== Dijkstra ===")
-print (edges)
-print ("A -> E:")
-print (dijkstra(edges, Pdep.get, "E"))
-print ("F -> G:")
-print (dijkstra(edges, "F", "G"))
