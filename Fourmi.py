@@ -2,6 +2,7 @@ import requests
 from Trajet import Trajet
 import time
 import datetime
+import json
 
 class Fourmi(object):
 
@@ -17,6 +18,9 @@ class Fourmi(object):
         self.vitesse = 0
         self.aller = None
         self.retour = None
+
+
+
 
 
     def getColonie(self):
@@ -71,23 +75,30 @@ class Fourmi(object):
         tpsDebut = time.time()
         posColonie = self.colonie.getPosition()
         positions=[{"lat":posColonie[0],"lon":posColonie[1],"timestamp":datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')}]
+        print(positions[0]["timestamp"])
+        repFourmi =  requests.post("https://f24h2018.herokuapp.com/auth/local",data = {"email":"ant"+str((self.id+1))+"@sugar.ant","password":"Baby"})
+        token = repFourmi.json()['token']
+        header = {'Authorization':"bearer "+token}
+        rep = requests.post("https://f24h2018.herokuapp.com/api/positions/bulk",headers=header,data={"trackId":trackID, "positions":positions})
+        print (rep)
         #Tant que la fourmi n'est pas arrivée à destination
         while (self.route.getNodes()[self.position] != (self.aller.getRoutes()[-1]).getNodes()[-1]):
             tpsTic = time.time()
             if((tpsTic - tpsDebut) >= 1):
-                positions.append({"lat":self.route.getNodes()[self.position][0],"lon":self.route.getNodes()[self.position][1],"timestamp":datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')})
+                #rep = requests.post("https://f24h2018.herokuapp.com/api/positions/bulk",headers=header,data =
+                #{"trackId":trackID,"positions":{"lat":self.route.getNodes()[self.position][0],"lon":self.route.getNodes()[self.position][1],"timestamp":datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')}})
+                #positions.append({"lat":self.route.getNodes()[self.position][0],"lon":self.route.getNodes()[self.position][1],"timestamp":datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')})
+                print(rep)
                 tpsDebut = tpsTic
             self.vitesse = self.route.getMaxSpeed()
             self.avancer(self.vitesse)
         self.prendreGraine()
-        repFourmi =  requests.post("https://f24h2018.herokuapp.com/auth/local",data = {"email":"ant"+str((self.id+1))+"@sugar.ant","password":"Baby"})
-        token = repFourmi.json()['token']
-        header = {'Authorization':"bearer "+token}
-        rep = requests.post("https://f24h2018.herokuapp.com/api/positions/bulk",headers=header,data = {"trackId":trackID,"positions":positions})
+
 
     def lancerRetour(self,trackID):
         self.cheminEnCours = self.retour
         positions=[{"lat":self.route.getNodes()[self.position][0],"lon":self.route.getNodes()[self.position][1],"timestamp":datetime.datetime.now().strftime('%Y-%m-%dT%H:%M:%S.%fZ')}]
+        print(positions)
         tpsDebut = time.time()
         #La fourmi repart
         while(self.route.getNodes()[self.position] != (self.aller.getRoutes()[-1]).getNodes()[-1]):
@@ -101,6 +112,7 @@ class Fourmi(object):
         token = repFourmi.json()['token']
         header = {'Authorization':"bearer "+token}
         rep = requests.post("https://f24h2018.herokuapp.com/api/positions/bulk",headers=header,data = {"trackId":trackID,"positions":positions})
+        print(rep)
         return True
 
 

@@ -23,7 +23,11 @@ class Trajet(object):
 		#print(request.json())
 		for etape in request.json()["routes"][0]["segments"][0]["steps"][:-1]:
 			#print(etape)
-			vitesseMax = (etape["distance"]/etape["duration"])*3.6
+			#vitesseMax = (etape["distance"]/etape["duration"])*3.6
+			api = overpy.Overpass()
+
+			query ="""[out:json];way["name"="%s"];(._;>;);out body;""" % etape["name"]
+			vitesseMax = api.query(query).ways[0].tags.get("maxspeed","50")
 			indDep = etape["way_points"][0]
 			indFin = etape["way_points"][1]
 			points = request.json()["routes"][0]["geometry"]["coordinates"][indDep:indFin]
